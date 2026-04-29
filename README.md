@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rosniel — Blog
 
-## Getting Started
+A small personal blog built end-to-end in **Next.js 16** (App Router).
+Posts are plain Markdown files in this repository — no database, no admin
+panel, no login. To publish, you add a file and push to git.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router, Turbopack)
+- **Markdown** content with **gray-matter** frontmatter
+- **marked** for rendering
+- **Tailwind v4** + custom CSS for the editorial look
+- Type set in **Fraunces**, **Newsreader**, **JetBrains Mono** (via `next/font`)
+
+## Run it
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Writing a post
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a new file in `content/posts/` — for example `my-new-post.md`.
+2. Add the frontmatter and your content:
 
-## Learn More
+   ```markdown
+   ---
+   title: "My New Post"
+   date: "2026-04-28"
+   tag: "essay"
+   excerpt: "One sentence shown in the post list."
+   ---
 
-To learn more about Next.js, take a look at the following resources:
+   Your post body, in Markdown.
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Save. The post appears at `/posts/my-new-post`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Frontmatter fields
 
-## Deploy on Vercel
+| Field      | Required | Notes                                                   |
+| ---------- | -------- | ------------------------------------------------------- |
+| `title`    | yes      | Heading shown on the post page                          |
+| `date`     | no       | ISO date; falls back to file mtime                      |
+| `tag`      | no       | One word — used for grouping and the filter chips       |
+| `excerpt`  | no       | One-sentence summary for the post list                  |
+| `draft`    | no       | `true` to hide the post from the index and routing      |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The slug is the filename without `.md`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project structure
+
+```
+app/
+  page.tsx              # post index
+  posts/[slug]/page.tsx # individual post
+  about/page.tsx        # bio
+components/             # Masthead, Footer, PostsList, etc.
+content/
+  posts/                # ← all posts live here
+lib/
+  posts.ts              # filesystem reader
+```
+
+## Deploy
+
+The blog is fully static-friendly. Run:
+
+```bash
+npm run build
+npm start
+```
+
+Or deploy to any host that runs Next.js (Vercel, Netlify, your own box).
+The only files needed at runtime are this repository — there's no external
+state to provision.
+
+## License
+
+Words © Rosniel. Code is open for study; pull requests welcome.
